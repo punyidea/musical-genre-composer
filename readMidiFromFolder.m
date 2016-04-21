@@ -1,4 +1,5 @@
-function [X,noteScale,aveDt]=readMidiFromFolder(folderPath,QN,maxLen)
+function [X,noteScale,aveDt]=readMidiFromFolder(folderPath,QN,maxLen,varargin)
+    
     fileCellArray=dir(folderPath);
     lowestNote=130; highestNote = 0;
     % Do a first pass on all files to find lowest and highest notes
@@ -16,6 +17,11 @@ function [X,noteScale,aveDt]=readMidiFromFolder(folderPath,QN,maxLen)
                 highestNote = highNote;
             end
         end
+    end
+    if nargin>0
+        noteRange = varargin{1};
+        lowestNote=min(noteRange);
+        highestNote=max(noteRange);
     end
     X=[];
     noteScale = lowestNote:highestNote;
