@@ -1,4 +1,4 @@
-function [ note_mat] = preprocess_MIDI( midi_file)
+function [ note_mat, tempo] = preprocess_MIDI( midi_file)
 %PREPROCESS_MIDI Summary of this function goes here
 %   Detailed explanation goes here
 midi = readmidi(midi_file);
@@ -7,10 +7,12 @@ Notes = midiInfo(midi,0);
 [tempo,tempo_times] = getTempoChanges(midi);
 dt= tempo(1);
 old_key = keys(1);
-[PR,~,~] = piano_roll(Notes,dt);
+[PR,~,note_scale] = piano_roll(Notes,dt);
+old_mat(note_scale-20,:) = PR;
 right_key = 0;
 A = (1:89)';
-note_mat = transpose_mat(PR,old_key,right_key);
+note_mat = transpose_mat(old_mat,old_key,right_key);
+note_mat = double(note_mat~=0);
 return
 
 function final_note_mat = transpose_mat(proto_note_mat,mat_key,new_key)
